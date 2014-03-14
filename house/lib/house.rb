@@ -24,6 +24,6 @@ class DrunkenMemory < Memory
   end
 
   def story
-    @story ||= __getobj__.shuffle
+    @story ||= __getobj__[0..-2].shuffle + __getobj__.last
   end
 end

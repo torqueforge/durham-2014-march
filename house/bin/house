@@ -17,5 +17,5 @@ SUBJECTS = [
   'the house that Jack built'
 ]
 
-memory = DrunkenMemory.new(SUBJECTS)
+memory = Memory.new(SUBJECTS)
 puts Bard.new(memory)
