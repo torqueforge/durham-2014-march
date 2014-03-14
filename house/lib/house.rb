@@ -1,34 +1,34 @@
 require 'delegate'
 
 class Bard
-  attr_reader :phrase
+  attr_reader :phrases
   def initialize(memory)
-    @phrase = PhraseConstructor.new(memory)
+    @phrases = Phrases.new(memory)
   end
 
   def to_s
-    phrase.length.times.map{|number| verse(number+1)}.join
+    phrases.length.times.map{|number| verse(number+1)}.join
   end
 
   def verse(number)
-    'This is ' + phrase.last(number).join(' ') + ".\n\n"
+    'This is ' + phrases.last(number).join(' ') + ".\n\n"
   end
 end
 
-class PhraseConstructor
-  attr_reader :words
+class Phrases
+  attr_reader :phrase_bank
   def initialize(memory)
-    @words = memory.recall
+    @phrase_bank = memory.recall.map do |actor, action|
+      'the ' + actor + ' that ' + action
+    end
   end
 
   def last(*args)
-    words.map do |actor, action|
-      'the ' + actor + ' that ' + action
-    end.last(*args)
+    phrase_bank.last(*args)
   end
   
   def length
-    words.length
+    phrase_bank.length
   end
 end
 
