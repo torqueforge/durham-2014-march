@@ -1,29 +1,45 @@
 require 'delegate'
 
 class Bard
-  attr_reader :memory
+  attr_reader :phrase
   def initialize(memory)
-    @memory = memory
+    @phrase = PhraseConstructor.new(memory)
   end
 
   def to_s
-    memory.length.times.map{|number| verse(number+1)}.join
+    phrase.length.times.map{|number| verse(number+1)}.join
   end
 
   def verse(number)
-    'This is ' + memory.last(number).join(' ') + ".\n\n"
+    'This is ' + phrase.last(number).join(' ') + ".\n\n"
+  end
+end
+
+class PhraseConstructor
+  attr_reader :words
+  def initialize(memory)
+    @words = memory.recall
+  end
+
+  def last(*args)
+    words.map do |actor, action|
+      'the ' + actor + ' that ' + action
+    end.last(*args)
+  end
+  
+  def length
+    words.length
   end
 end
 
 class Memory < SimpleDelegator
+  def recall
+    __getobj__
+  end
 end
 
 class DrunkenMemory < Memory
-  def last(*args)
-    story.last(*args)
-  end
-
-  def story
-    @story ||= __getobj__[0..-2].shuffle + __getobj__.last
+  def recall
+    __getobj__[0..-2].transpose.map(&:shuffle).transpose << __getobj__.last
   end
 end
