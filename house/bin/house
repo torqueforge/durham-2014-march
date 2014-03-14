@@ -17,4 +17,5 @@ SUBJECTS = [
   'the house that Jack built'
 ]
 
-puts HouseSong.new(SUBJECTS).sing
+memory = DrunkenMemory.new(SUBJECTS)
+puts Bard.new(memory)

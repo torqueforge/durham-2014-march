@@ -1,14 +1,29 @@
-class HouseSong
-  attr_reader :subjects
-  def initialize(subjects)
-    @subjects = subjects
+require 'delegate'
+
+class Bard
+  attr_reader :memory
+  def initialize(memory)
+    @memory = memory
   end
 
-  def sing
-    subjects.length.times.map{|number| verse(number+1)}
+  def to_s
+    memory.length.times.map{|number| verse(number+1)}.join
   end
 
   def verse(number)
-    'This is ' + subjects.last(number).join(' ') + ".\n\n"
+    'This is ' + memory.last(number).join(' ') + ".\n\n"
+  end
+end
+
+class Memory < SimpleDelegator
+end
+
+class DrunkenMemory < Memory
+  def last(*args)
+    story.last(*args)
+  end
+
+  def story
+    @story ||= __getobj__.shuffle
   end
 end
