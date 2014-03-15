@@ -1,9 +1,7 @@
-require 'delegate'
-
 class Bard
   attr_reader :phrases
   def initialize(memory)
-    @phrases = Phrases.new(memory)
+    @phrases = memory.recall
   end
 
   def to_s
@@ -15,31 +13,28 @@ class Bard
   end
 end
 
-class Phrases
-  attr_reader :phrase_bank
-  def initialize(memory)
-    @phrase_bank = memory.recall.map do |actor, action|
+class Memory
+  attr_reader :actors, :actions
+  def initialize(actors=ACTORS, actions=ACTIONS)
+    @actors, @actions = pre_initialize(actors, actions)
+  end
+
+  def pre_initialize(actors, actions)
+    [actors, actions]
+  end
+
+  def recall
+    actors.zip(actions).map { |actor, action|
       'the ' + actor + ' that ' + action
-    end
+    } << 'the house that Jack built'
   end
 
-  def last(*args)
-    phrase_bank.last(*args)
-  end
-  
-  def length
-    phrase_bank.length
-  end
+  ACTORS = ['horse and the hound and the horn','farmer sowing his corn','rooster that crowed in the morn','priest all shaven and shorn','man all tattered and torn','maiden all forlorn','cow with the crumpled horn','dog','cat','rat','malt']
+  ACTIONS = ['belonged to','kept','woke','married','kissed','milked','tossed','worried','killed','ate','lay in']
 end
 
-class Memory < SimpleDelegator
-  def recall
-    __getobj__
-  end
-end
-
-class DrunkenMemory < Memory
-  def recall
-    __getobj__[0..-2].transpose.map(&:shuffle).transpose << __getobj__.last
+class ImpairedMemory < Memory
+  def pre_initialize(actors, actions)
+    [actors.shuffle, actions.shuffle]
   end
 end
