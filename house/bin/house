@@ -1,6 +1,4 @@
 #!/usr/bin/env ruby
 
 require_relative '../lib/house'
-
-memory = ImpairedMemory.new
-puts Bard.new(memory)
+puts Bard.new
